@@ -3,3 +3,7 @@ https://pypi.org/project/Gutenberg/
 https://www.lfd.uci.edu/~gohlke/pythonlibs/#bsddb3
 https://www.nltk.org/book_1ed/ch03.html
 https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
+
+
+after restarting with book summaries:
+https://www.kaggle.com/datasets/ymaricar/cmu-book-summary-dataset
