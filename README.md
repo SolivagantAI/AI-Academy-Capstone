@@ -15,6 +15,7 @@ But how much of genre can be understood just from the text? This project explore
 Our data was taken from Jasminyas' __[CMU Book Summary Dataset](https://www.kaggle.com/datasets/ymaricar/cmu-book-summary-dataset)__ on Kaggle. It contains our key values of book summaries from Wikipedia and book genres from Freebase, as well as other attributes which provide context, such as the title, author, and date published.
 
 The dataset contained 16,000+ books, but only 12,000 were tagged with genres. Of these, most books had multiple genres, and many of the genres were underrepresented (<20 samples in the entire set). To counter this imbalance, we dropped all genres with <500 samples, retaining only the most popular genres in our set (see below). These were the genres our model was trained to predict.
+
 ![bar plot of top genres](Images/genres.png)
 
 We first cleaned and transformed the summaries for Natural Language Processing (NLP) by...
@@ -25,6 +26,7 @@ We first cleaned and transformed the summaries for Natural Language Processing (
   5. tagging the parts of speech, 
   6. lemmatizing the remaining text, and finally 
   7. reassembling the processed text into a single string for each book.
+
 After pre-processing, we created two versions of the data for analysis: one using Bag of Words approach (CountVectorizer) and another using Term Frequency - Inverse Document Frequency (TfidfVecotrizer). We then build and compared two models for each version of the data.
 
 The first model set we trained used a complement naive Bayes methodology to predict the genres based on transformed summaries (both BoW and TF-IDF). Naive Bayes methods are commonly used for NLP tasks and have a history of good predictive power in tasks such as sentiment analysis. Multinomial naive Bayes is the most common chouce for this tast, though complement has been seen to outperform it in NLP tasks on a regular basis. Our results were the same for both preparations, and the scores were universally low (accuracy ~16%).
@@ -34,12 +36,62 @@ The first model set we trained used a complement naive Bayes methodology to pred
 Our second model set was a multinomial naive Bayes. Since this is the classic choice, it was a reasonable baseline for comparison. However, its scores were similar to those of the complement naive Bayes, through there was an odd difference in the TF-IDF data where the training accuracy was lower and the test accuracy was higher (~20%) than our other versions.
 
 Since the preparations performed similarly in both baseline models, we continued with the complement naive Bayes modeling using our TF-IDF data. We performed a comprehensive scan for the most appropriate alpha for our model and extended it with k-fold validation. However, like with the TF-IDF data in our multinomial model, futher training actually reduced the training score while improving the test score. Digging into this phenomenon, we discovered that our model had foud that the best way to improve its own accuracy was to predict either Fiction or Speculative Fiction for every text. While this was absolutely more accurate over the entire set, it was likely a result of our large genre imbalances and actually delivered less utility than our baseline cnb model.
+
 ![training and testing performance of model over various alpha values](Images/training.png)
 
 ## Concluding Remarks
 Despite its underwhelming performance, the baseline complement naive Bayes model with TF-IDF data was ultimately the best. There are still many possible ways in which to improve the model, but it is of limited utility in its current form. There are several sgnificant limitations (like the poor accuracy, limited set of genres, and single-genre suggestions), though these might be targets for future improvements. The most promising avenue of improvement is the choice of a different modeling technique. While CNB and MNB are both commonly used for predictive NLP tasks, the presence of multiple genres per book might perform better with a multi-class classification model.
 
 ### Working Directory Structure
+Final project __[here](Notebooks/00_Final.ipynb)__, and presentation __[here](Presentations/)__.
 
+```
+.
+|   .gitignore
+|   README.md
+|       
++---Data
+|   |   booksummaries.txt
+|   |   
+|   +---old
+|   |       GUTINDEX.ALL.txt
+|   |       MIRRORS.ALL.txt
+|   |       
+|   \---pickles
+|           TFIDF.dat
+|           trained_cnb.dat
+|           
++---Documentation
+|       Capstone Project Description.pdf
+|       Capstone Project Proposal Template.docx
+|       Capstone Project Proposal Template.pdf
+|       Deloitte Apprenticeship Capstone Rubric Checklist.pdf
+|       
++---Images
+|       confusion_matrix.png
+|       genres.png
+|       lorem_ipsum.png
+|       training.png
+|       
++---Notebooks
+|   |   00_Final.ipynb
+|   |   01_Data Acquisition and Exploration.ipynb
+|   |   02_Data_Cleaning_and_Preparation.ipynb
+|   |   03_Bag_of_Words_and_TF-IDF.ipynb
+|   |   04_Complement_Naive_Bayes_and_Prediction.ipynb
+|   |       
+|   \---_old_versions
+|           bsddb3-6.2.9-cp38-cp38-win_amd64.whl
+|           guteberg_download.py
+|           old_01_gutenberg_download.ipynb
+|           old_02_initial_processing.ipynb
+|           old_03_data_cleaning.ipynb
+|           old_04_Process_and_Predict.ipynb
+|           sources.txt
+|           
+\---Presentations
+        Machine Learning in the Milieu.pdf
+        Machine Learning in the Milieu.pptx
+```
 
 [^1]: From "The View from the Cheap Seats: Selected Nonfiction" by Neil Gaiman, 2016.
